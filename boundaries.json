@@ -1,0 +1,9 @@
+{
+  "name": "bnd-gui",
+  "icon": "icon.png",
+  "command": {
+    "install": "python3 install.py",
+    "run": "./main.py"
+  },
+  "de_name": "boundaries GUI"
+}
