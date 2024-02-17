@@ -10,6 +10,40 @@ def run(name: str):
     thread.start()
 
 
+def details_win(name: str):
+
+    info = boundaries.getpkginfo(name)
+
+    if info is None or "name" not in info:
+        print("Not Found")
+        return False
+
+    if "de_name" in info:
+        title = info["de_name"]
+    else:
+        title = info["name"]
+
+    detail_win = customtkinter.CTk(className="bnd-gui")
+
+    detail_win.title(title)
+    detail_win.grid_columnconfigure(0, weight=1)
+    detail_win.grid_rowconfigure(0, weight=1)
+
+    top_frame = customtkinter.CTkFrame(detail_win)
+    top_frame.grid_columnconfigure(0, weight=3)
+    top_frame.grid_columnconfigure(1, weight=1)
+    top_frame.grid_rowconfigure(0, weight=1)
+    top_frame.grid(row=0, column=0, padx=20, pady=20, sticky="new")
+
+    title_label = customtkinter.CTkLabel(top_frame, text=title)
+    title_label.grid(row=0, column=0, padx=20, pady=20, sticky="nesw")
+
+    launch_button = customtkinter.CTkButton(top_frame, text="Launch", command=lambda x=info["name"]: run(x))
+    launch_button.grid(row=0, column=1, padx=20, pady=20, sticky="nesw")
+
+    detail_win.mainloop()
+
+
 def main():
 
     blacklist = ["bnd-gui"]
@@ -17,7 +51,7 @@ def main():
     app = customtkinter.CTk(className="bnd-gui")
 
     app.title("boundaries GUI")
-    # app.geometry("400x150")
+    app.geometry("400x550")
     app.grid_columnconfigure(0, weight=1)
     app.grid_rowconfigure(0, weight=1)
 
@@ -36,7 +70,7 @@ def main():
         if info is not None and "name" in info and "de_name" in info and not info["name"] in blacklist:
             btn_text = info["de_name"]
 
-            buttons.append(customtkinter.CTkButton(scrollable_frame, text=btn_text, command=lambda x=info["name"]: run(x)))
+            buttons.append(customtkinter.CTkButton(scrollable_frame, text=btn_text, command=lambda x=info["name"]: details_win(x)))
 
             btn_row += 1
 
