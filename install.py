@@ -1,6 +1,7 @@
 #!/bin/python3
 from pathlib import Path
 import os
+import customtkinter
 
 if os.path.exists("boundaries.py"):
     os.remove("boundaries.py")
