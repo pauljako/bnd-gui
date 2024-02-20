@@ -4,23 +4,41 @@ import customtkinter
 import boundaries
 import os
 
+install_status_text: customtkinter.CTkLabel
+
+
+def install_callback(filepath):
+    global install_status_text
+    success = boundaries.install(filepath)
+    if success:
+        install_status_text.configure(text="Done")
+    else:
+        install_status_text.configure(text="Failure")
+
 
 def install():
+    global install_status_text
 
     filetypes = (
         ('All files', '*.*'),
     )
 
-    file = customtkinter.filedialog.askopenfile(initialdir="~", filetypes=filetypes, title="Select File to Install")
+    file = customtkinter.filedialog.askopenfilename(initialdir="~", filetypes=filetypes, title="Select File to Install")
 
     install_win = customtkinter.CTk(className="bnd-gui")
     install_win.title("Installing")
     install_win.grid_columnconfigure(0, weight=1)
     install_win.grid_rowconfigure(0, weight=1)
 
+    install_status_text = customtkinter.CTkLabel(install_win, text="Please Wait")
+    install_status_text.grid(row=0, column=0, padx=20, pady=20, sticky="s")
+
     progress_bar = customtkinter.CTkProgressBar(install_win, mode="indeterminate")
-    progress_bar.grid(row=0, column=0, padx=20, pady=20, sticky="new")
+    progress_bar.grid(row=1, column=0, padx=20, pady=20, sticky="new")
     progress_bar.start()
+
+    thread = threading.Thread(target=install_callback, args=(file,))
+    thread.start()
 
     install_win.mainloop()
 
