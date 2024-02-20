@@ -5,6 +5,26 @@ import boundaries
 import os
 
 
+def install():
+
+    filetypes = (
+        ('All files', '*.*'),
+    )
+
+    file = customtkinter.filedialog.askopenfile(initialdir="~", filetypes=filetypes, title="Select File to Install")
+
+    install_win = customtkinter.CTk(className="bnd-gui")
+    install_win.title("Installing")
+    install_win.grid_columnconfigure(0, weight=1)
+    install_win.grid_rowconfigure(0, weight=1)
+
+    progress_bar = customtkinter.CTkProgressBar(install_win, mode="indeterminate")
+    progress_bar.grid(row=0, column=0, padx=20, pady=20, sticky="new")
+    progress_bar.start()
+
+    install_win.mainloop()
+
+
 def run(name: str):
     thread = threading.Thread(target=boundaries.run, args=(name, []))
     thread.start()
@@ -53,13 +73,17 @@ def main():
     app.title("boundaries GUI")
     app.geometry("400x550")
     app.grid_columnconfigure(0, weight=1)
-    app.grid_rowconfigure(0, weight=1)
+    app.grid_rowconfigure(0, weight=0)
+    app.grid_rowconfigure(1, weight=1)
+
+    add_button = customtkinter.CTkButton(app, text="Install", command=install)
+    add_button.grid(row=0, column=0, padx=20, pady=20, sticky="nw")
 
     scrollable_frame = customtkinter.CTkScrollableFrame(app, label_text="Installed Apps")
     scrollable_frame.bind_all("<Button-4>", lambda e: scrollable_frame._parent_canvas.yview("scroll", -1, "units"))
     scrollable_frame.bind_all("<Button-5>", lambda e: scrollable_frame._parent_canvas.yview("scroll", 1, "units"))
     scrollable_frame.grid_columnconfigure(0, weight=1)
-    scrollable_frame.grid(row=0, column=0, padx=20, pady=20, sticky="nesw")
+    scrollable_frame.grid(row=1, column=0, padx=20, pady=20, sticky="nesw")
 
     btn_row = 0
     buttons = []
